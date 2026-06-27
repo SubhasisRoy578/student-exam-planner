@@ -1,0 +1,86 @@
+// Prisma schema for the Student Exam Planner backend.
+// Database: PostgreSQL. Run `npm run prisma:migrate` after setting DATABASE_URL.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  String   @id @default(uuid())
+  email               String   @unique
+  passwordHash        String   @map("password_hash")
+  emailVerified        Boolean  @default(false) @map("email_verified")
+  verificationToken     String?  @unique @map("verification_token")
+  verificationExpires   DateTime? @map("verification_expires")
+  resetPasswordToken    String?  @unique @map("reset_password_token")
+  resetPasswordExpires  DateTime? @map("reset_password_expires")
+  createdAt           DateTime @default(now()) @map("created_at")
+  updatedAt           DateTime @updatedAt @map("updated_at")
+
+  plans         StudentPlan[]
+  progress      Progress[]
+  mockInterviews MockInterview[]
+  achievements  Achievement[]
+
+  @@map("users")
+}
+
+model StudentPlan {
+  id           String   @id @default(uuid())
+  userId       String   @map("user_id")
+  examDate     DateTime @map("exam_date")
+  goal         String?
+  weakSubjects Json     @default("[]") @map("weak_subjects")
+  dailyHours   Float    @default(0) @map("daily_hours")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("student_plans")
+}
+
+model Progress {
+  id                String   @id @default(uuid())
+  userId            String   @map("user_id")
+  subjectName       String   @map("subject_name")
+  masteryPercentage Float    @default(0) @map("mastery_percentage")
+  completedTasks    Json     @default("[]") @map("completed_tasks")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One progress row per subject per user.
+  @@unique([userId, subjectName])
+  @@map("progress")
+}
+
+model MockInterview {
+  id            String    @id @default(uuid())
+  userId        String    @map("user_id")
+  scheduledDate DateTime  @map("scheduled_date")
+  feedback      String?
+  score         Float?
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("mock_interviews")
+}
+
+model Achievement {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  logEntry    String   @map("log_entry")
+  date        DateTime @default(now())
+  streakCount Int      @default(0) @map("streak_count")
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("achievements")
+}
