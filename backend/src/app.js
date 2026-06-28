@@ -1,7 +1,3 @@
-// Express app setup: security middleware, CORS, body parsing,
-// routes, and error handling. Exported separately from server.js so
-// it can be imported by tests without starting an actual listener.
-
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -17,16 +13,38 @@ app.use(helmet());
 // CORS restricted to the configured frontend origin only.
 app.use(
   cors({
-    origin: config.frontendUrl,
+    origin: config.frontendUrl || '*',
     credentials: true,
   })
 );
 
 app.use(express.json({ limit: '1mb' }));
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({
+    message: 'Student Exam Planner API',
+    status: 'online',
+    version: '1.0.0',
+    endpoints: {
+      auth: '/api/auth',
+      user: '/api/user',
+      plan: '/api/plan',
+      progress: '/api/progress',
+      mocks: '/api/mock-interviews',
+      achievements: '/api/achievements',
+      dashboard: '/api/dashboard',
+      guestSync: '/api/guest-sync'
+    }
+  });
+});
+
+// Health check
 app.get('/health', (req, res) => res.json({ status: 'ok' }));
 
+// API routes
 app.use('/api', apiLimiter, apiRoutes);
 
+// 404 handler
 app.use(notFoundHandler);
 app.use(errorHandler);
