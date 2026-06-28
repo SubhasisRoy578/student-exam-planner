@@ -12,6 +12,7 @@
         </button>
       </span>
       <input
+        ref="inputRef"
         v-model="input"
         type="text"
         :placeholder="modelValue.length === 0 ? placeholder : ''"
@@ -34,6 +35,7 @@ const props = withDefaults(defineProps<{
 
 const emit = defineEmits<{ 'update:modelValue': [string[]] }>()
 const input = ref('')
+const inputRef = ref<HTMLInputElement | null>(null)
 
 function add() {
   const val = input.value.trim()
