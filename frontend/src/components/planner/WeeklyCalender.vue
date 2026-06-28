@@ -64,11 +64,11 @@ function isToday(i: number): boolean {
 
 // Distribute subjects evenly across week days
 function getTasksForDay(dayIndex: number) {
-  const subjects = progressStore.subjects
-  return subjects.filter((_, idx) => idx % 7 === dayIndex).map((s) => ({
+  const subjects = progressStore.subjects || []
+  return subjects.filter((_: any, idx: number) => idx % 7 === dayIndex).map((s: any) => ({
     id:    s.name,
     label: s.name,
-    color: s.color
+    color: s.color || '#3B82F6'
   }))
 }
 </script>
