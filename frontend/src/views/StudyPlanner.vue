@@ -96,34 +96,34 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import AppLayout    from '@/components/common/AppLayout.vue'
-import TagInput     from '@/components/planner/TagInput.vue'
-import WeeklyCalendar from '@components/planner/WeeklyCalendar.vue'
+import AppLayout from '@/components/common/AppLayout.vue'
+import TagInput from '@/components/planner/TagInput.vue'
+import WeeklyCalendar from '@/components/planner/WeeklyCalendar.vue'
 import { usePlanStore } from '@/stores/plan'
-import { daysUntil }    from '@/utils/helpers'
-import { useToast }     from '@/composables/useToast'
+import { daysUntil } from '@/utils/helpers'
+import { useToast } from '@/composables/useToast'
 
 const planStore = usePlanStore()
-const toast     = useToast()
-const today     = new Date().toISOString().split('T')[0]
+const toast = useToast()
+const today = new Date().toISOString().split('T')[0]
 
 const form = ref({
-  examDate:     '',
-  goal:         '',
-  dailyHours:   4,
+  examDate: '',
+  goal: '',
+  dailyHours: 4,
   weakSubjects: [] as string[]
 })
 
 const daysLeft = computed(() => daysUntil(form.value.examDate))
-const subjectColors = ['#3b82f6','#f97316','#8b5cf6','#10b981','#ef4444','#f59e0b']
+const subjectColors = ['#3b82f6', '#f97316', '#8b5cf6', '#10b981', '#ef4444', '#f59e0b']
 
 onMounted(async () => {
   await planStore.fetchPlan()
   const p = planStore.plan
   form.value = {
-    examDate:     p.examDate     || '',
-    goal:         p.goal         || '',
-    dailyHours:   p.dailyHours   || 4,
+    examDate: p.examDate || '',
+    goal: p.goal || '',
+    dailyHours: p.dailyHours || 4,
     weakSubjects: p.weakSubjects || [],
   }
 })
