@@ -31,7 +31,7 @@ router.use('/auth', authRoutes);
 router.use('/user', userRoutes);
 router.use('/plan', planRoutes);
 router.use('/progress', progressRoutes);
-router.use('/mock-interviews', mockInterviewRoutes);
+router.use('/mocks', mockInterviewRoutes);
 router.use('/achievements', achievementRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/guest-sync', guestSyncRoutes);
