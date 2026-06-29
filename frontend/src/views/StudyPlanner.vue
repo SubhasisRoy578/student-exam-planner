@@ -95,6 +95,7 @@
 </template>
 
 <script setup lang="ts">
+console.log('WeeklyCalendar loaded')  // Add this line
 import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/components/common/AppLayout.vue'
 import TagInput from '@/components/planner/TagInput.vue'
