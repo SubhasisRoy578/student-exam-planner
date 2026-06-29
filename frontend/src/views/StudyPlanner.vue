@@ -99,7 +99,7 @@ console.log('WeeklyCalendar loaded')  // Add this line
 import { ref, computed, onMounted } from 'vue'
 import AppLayout from '@/components/common/AppLayout.vue'
 import TagInput from '@/components/planner/TagInput.vue'
-import WeeklyCalendar from '../components/planner/WeeklyCalendar.vue'
+import WeeklyCalendar from '../components/planner/WeeklyCalender.vue'
 import { usePlanStore } from '@/stores/plan'
 import { daysUntil } from '@/utils/helpers'
 import { useToast } from '@/composables/useToast'
