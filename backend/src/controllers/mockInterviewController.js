@@ -22,29 +22,58 @@ export const getMockInterviews = asyncHandler(async (req, res) => {
   res.json({ interviews: interviews.map(serializeInterview) });
 });
 
-export const createMockInterview = asyncHandler(async (req, res) => {
-  const { scheduled_date } = req.body;
+export const createMockInterviews = asyncHandler(async (req, res) => {
+  const { scheduledDate } = req.body;
 
   const interview = await prisma.mockInterview.create({
-    data: { userId: req.user.id, scheduledDate: scheduled_date },
+    data: { 
+      userId: req.user.id, 
+      scheduledDate: scheduledDate 
+    },
   });
 
-  res.status(201).json({ message: 'Mock scheduled', interview: serializeInterview(interview) });
+  res.status(201).json({ 
+    message: 'Mock scheduled', 
+    interview: serializeInterview(interview) 
+  });
 });
 
-export const updateMockInterview = asyncHandler(async (req, res) => {
+export const updateMockInterviews = asyncHandler(async (req, res) => {
   const { id } = req.params;
   const { feedback, score } = req.body;
 
   // Scope the lookup to the authenticated user so one user can't
   // overwrite another user's interview by guessing an id.
-  const existing = await prisma.mockInterview.findFirst({ where: { id, userId: req.user.id } });
+  const existing = await prisma.mockInterview.findFirst({ 
+    where: { id, userId: req.user.id } 
+  });
+  
   if (!existing) throw new ApiError(404, 'Mock interview not found');
 
-  await prisma.mockInterview.update({
+  const updated = await prisma.mockInterview.update({
     where: { id },
     data: { feedback, score },
   });
 
-  res.json({ message: 'Feedback added' });
+  res.json({ 
+    message: 'Feedback added', 
+    interview: serializeInterview(updated) 
+  });
+});
+
+export const deleteMockInterview = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+
+  // Scope the lookup to the authenticated user
+  const existing = await prisma.mockInterview.findFirst({ 
+    where: { id, userId: req.user.id } 
+  });
+  
+  if (!existing) throw new ApiError(404, 'Mock interview not found');
+
+  await prisma.mockInterview.delete({
+    where: { id },
+  });
+
+  res.json({ message: 'Mock interview deleted successfully' });
 });
